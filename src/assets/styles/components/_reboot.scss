@@ -1,0 +1,100 @@
+@import './variables';
+
+* {
+  outline: none !important;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 16px;
+  scrollbar-width: none !important;
+}
+
+.fa, .fas, .far, .fal {
+  font-family: 'Font Awesome 5 Pro';
+}
+
+.fab {
+  font-family: 'Font Awesome 5 Brands';
+}
+
+:focus, :active, :enabled {
+  outline: none !important;
+}
+
+ul {
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 0;
+}
+
+p {
+  margin: 0;
+  padding-bottom: 0.25rem;
+}
+
+
+p, span {
+  color: $text-color;
+}
+
+input[type='text'] {
+  &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $border-color;
+    opacity: 1; /* Firefox */
+  }
+
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: $border-color;
+  }
+
+  &::-ms-input-placeholder { /* Microsoft Edge */
+    color: $border-color;
+  }
+}
+
+b {
+  font-weight: 600;
+}
+
+a:hover {
+  outline: 0;
+  text-decoration: none;
+  color: unset;
+}
+
+
+a:active {
+  outline: 0;
+  text-decoration: none;
+}
+
+a:focus {
+  outline: 0;
+  text-decoration: none;
+}
+
+.btn:focus, .btn.focus {
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.clear {
+  clear: both;
+}
+
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+::placeholder {
+  font-size: 14px !important;
+}
+
+li {
+  list-style-type: none;
+}
+

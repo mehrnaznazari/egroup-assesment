@@ -1,0 +1,74 @@
+<div class="calendar">
+
+  <div class="flex-container calendar-header">
+
+    <div class="calendar-filter">
+      <select *ngIf="labels" (change)="changeFilter($event)">
+          <option *ngFor="let label of labels"
+                  [value]="label.id"
+          >{{label.text}}</option>
+      </select>
+    </div>
+
+    <div class="calendar-header-week flex-center">
+      <button class="arrow-icon" (click)="arrowHandler('previous')">
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+
+      <span class="calendar-week">Week <span>{{weekOfYear}}</span> </span>
+
+      <button class="arrow-icon" (click)="arrowHandler('next')">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <ng-container *ngIf="calendar.length">
+    <ng-container *ngFor="let calendarItem of calendar; let i = index">
+      <div class="flex-container row" *ngIf="calendarItem.length">
+
+        <ng-container *ngFor="let calendarDay of calendarItem; let dayIndex = index;">
+          <div class="cell-calendar cell-label" *ngIf="dayIndex === 0 && i === 0">&nbsp;</div>
+          <div class="cell-calendar cell-label" *ngIf="dayIndex === 0 && i > 0">{{calendarDay.weekLabel.text}}</div>
+          <div *ngIf="!calendarDay.isWeekend"
+               class="cell-calendar"
+          >
+            <ng-container *ngIf="i==0">
+              <div class="name-day">{{calendarDay.dayName}} </div>
+              <div class="name-date">{{calendarDay.day}}</div>
+            </ng-container>
+
+            <ng-container *ngIf="findNoteInNotes(calendarDay.date) && i!==0">
+              <ng-container *ngFor="let item of findNoteInNotes(calendarDay.date); let count = index;">
+                <div *ngIf="item.labels.includes(calendarDay.weekLabel.id)"
+                     class="note-cart"
+                     [style.z-index]="count"
+                     [style.left.px]="3*count+5"
+                     [style.top.px]="3*count+5"
+                     [ngClass]="{'double': item.dateTimes.length> 1}"
+                >
+<!--                  width: item.dateTimes.length*100, zindex: 3, overflow: 'auto'-->
+                  <div class="note-cart-container">
+                    <div class="note-cart-header">
+                      <span class="badge">{{item.id}}</span>
+                      <span class="note-title">{{item.title}}</span>
+                    </div>
+                    <div class="note-cart-desc">
+                      <p>{{item.summary}}</p>
+                      <div class="note-cart-date">start Date: {{item.dateTimes[0]}}</div>
+                      <p>Duration: {{item.dateTimes.length}}</p>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+
+      </div>
+    </ng-container>
+  </ng-container>
+
+</div>
