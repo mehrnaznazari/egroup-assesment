@@ -184,7 +184,6 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // TODO uncomment this
     this.route.data
       .pipe(untilDestroyed(this))
       .subscribe(res => {

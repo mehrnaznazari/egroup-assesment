@@ -1,0 +1,8 @@
+@import '../components/variables';
+
+html, body {
+  min-height: 100%;
+  font-family: 'Lato', serif;
+  font-size: 100%;
+  background-color: $bg-color;
+}

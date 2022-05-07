@@ -12,14 +12,6 @@
   scrollbar-width: none !important;
 }
 
-.fa, .fas, .far, .fal {
-  font-family: 'Font Awesome 5 Pro';
-}
-
-.fab {
-  font-family: 'Font Awesome 5 Brands';
-}
-
 :focus, :active, :enabled {
   outline: none !important;
 }
@@ -64,7 +56,6 @@ a:hover {
   text-decoration: none;
   color: unset;
 }
-
 
 a:active {
   outline: 0;

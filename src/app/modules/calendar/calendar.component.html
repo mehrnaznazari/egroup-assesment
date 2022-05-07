@@ -53,6 +53,7 @@
                     <div class="note-cart-header">
                       <span class="badge">{{item.id}}</span>
                       <span class="note-title">{{item.title}}</span>
+                      <span class="note-label">{{calendarDay.weekLabel.text}}</span>
                     </div>
                     <div class="note-cart-desc">
                       <p>{{item.summary}}</p>
@@ -61,6 +62,8 @@
                     </div>
                   </div>
                 </div>
+
+<!--                {{calendarDay | json}}-->
 
               </ng-container>
             </ng-container>
