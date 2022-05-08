@@ -6,3 +6,18 @@ html, body {
   font-size: 100%;
   background-color: $bg-color;
 }
+
+.btn {
+  &.btn-orange {
+    transition: all .3s;
+    background-color: $deep-orange-3;
+    border-color: $deep-orange-3;
+    color: $white !important;
+    padding: 7px 1rem;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+}

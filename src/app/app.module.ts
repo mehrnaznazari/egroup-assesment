@@ -5,7 +5,8 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {HttpInterceptorService} from "./shared/services/http-interceptor.service";
 import { AppComponent } from './app.component';
 import {AppRoutingModule} from "./app-routing.module";
-import { CalendarComponent } from './modules/calendar/calendar.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -14,7 +15,10 @@ import { CalendarComponent } from './modules/calendar/calendar.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule,
+    HttpClientModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

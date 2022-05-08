@@ -1,17 +1,30 @@
 /*#region ============ color ========== */
 $black: #000000;
 $white: #ffffff;
+$error: #F38C09;
 
 $bg-color: #FAFAFA;
 $text-color: #4f5964;
 $border-color: #d8d9da;
 $green-1: #59b53b;
 $green-2: #eff8ec;
-$green-border: #c2d1be;
-$navy-blue: #032541;
-$light-blue: rgb(1, 180, 228);
+$green-label: #79b067;
 
-$radius: 24px;
+$green-border: #c2d1be;
+
+
+$grey-3: #8E8E8E;
+
+$deep-orange-1: #F38C09;
+$deep-orange-2: #F5A53F;
+$deep-orange-3: #F7B25B;
+$deep-orange-4: #FCE5C8;
+$deep-orange-5: #FDF2E3;
+
+
+$radius: 2px;
+$radius-3: 3px;
+$radius-50: 50%;
 
 //breakpoint
 $breakpoint-mobile: "only screen and (max-width : 575px)";

@@ -1,0 +1,35 @@
+<div class="edit-card-wrapper">
+  <h6>Edit Event</h6>
+  <form (ngSubmit)="editFormSubmit()" [formGroup]="editForm" class="edit-card-form">
+    <div class="edit-card-textarea form-wrapper ">
+      <label>
+        <span>Summery</span>
+          <textarea [ngClass]="{'border-error' :
+                      (editForm.controls['cartDescription'].dirty ||
+                      editForm.controls['cartDescription'].touched) &&
+                       (editForm.hasError('required', 'cartDescription'))}"
+                    class="textarea-control"
+                    formControlName="cartDescription"
+                    maxlength="250"
+                    placeholder="Summery"></textarea>
+      </label>
+    </div>
+    <div class="edit-card-date">
+      <div class="input-group">
+        <input #d="ngbDatepicker"
+               class="form-control"
+               formControlName="datePicker"
+               name="dp"
+               ngbDatepicker
+               placeholder="yyyy-mm-dd">
+        <button (click)="d.toggle()" class="btn btn-calendar" type="button">
+          <i class="fa-solid fa-calendar-days"></i>
+        </button>
+      </div>
+    </div>
+    <div class="edit-card-button">
+      <button [disabled]="!(editForm.valid)" class="btn btn-orange w-100" type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+

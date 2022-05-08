@@ -26,7 +26,7 @@
 
   <ng-container *ngIf="calendar.length">
     <ng-container *ngFor="let calendarItem of calendar; let i = index">
-      <div class="flex-container row" *ngIf="calendarItem.length">
+      <div class="flex-container calendar-row" *ngIf="calendarItem.length">
 
         <ng-container *ngFor="let calendarDay of calendarItem; let dayIndex = index;">
           <div class="cell-calendar cell-label" *ngIf="dayIndex === 0 && i === 0">&nbsp;</div>
@@ -47,6 +47,7 @@
                      [style.left.px]="3*count+5"
                      [style.top.px]="3*count+5"
                      [ngClass]="{'double': item.dateTimes.length> 1}"
+                     (click)="selectDay(calendarDay)"
                 >
 <!--                  width: item.dateTimes.length*100, zindex: 3, overflow: 'auto'-->
                   <div class="note-cart-container">

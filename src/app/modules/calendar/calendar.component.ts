@@ -7,6 +7,8 @@ import {AnalyzedNoteModel} from "./models/analyzed-note.model";
 import {CalendarDayItemModel} from "./models/calendar-day-item.model";
 import {LabelModel} from "./models/label.model";
 import {NoteModel} from "./models/note.model";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {EditCardModalComponent} from "./components/edit-card-modal/edit-card-modal.component";
 
 @UntilDestroy()
 
@@ -180,7 +182,8 @@ export class CalendarComponent implements OnInit {
     labels: [{"id": 1, "text": "Frontend"}, {"id": 2, "text": "Backend"}, {"id": 3, "text": "Security"}]
   };
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,
+              private ngbModal: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -278,5 +281,11 @@ export class CalendarComponent implements OnInit {
       temp.push(this.calendar[$event.target.value])
     }
     this.calendar = temp;
+  }
+
+  selectDay(day: CalendarDayItemModel): void {
+    const editCart = this.ngbModal.open(EditCardModalComponent, {size: 'lg', centered: true});
+    editCart.componentInstance.calendarData = day;
+    console.log(day)
   }
 }

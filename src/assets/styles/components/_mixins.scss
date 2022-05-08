@@ -1,0 +1,58 @@
+@import "~src/assets/styles/components/variables";
+
+@mixin limited-text($line:9) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+
+@mixin transition($element, $speed) {
+  -webkit-transition: $element $speed;
+  -moz-transition: $element $speed;
+  -ms-transition: $element $speed;
+  -o-transition: $element $speed;
+  transition: $element $speed;
+}
+
+@mixin transform($transform) {
+  -webkit-transform: $transform;
+  -moz-transform: $transform;
+  -ms-transform: $transform;
+  -o-transform: $transform;
+  transform: $transform;
+}
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow: inset $top $left $blur $color;
+    -moz-box-shadow: inset $top $left $blur $color;
+    box-shadow: inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+@mixin box-shadow-general() {
+  -webkit-box-shadow: 0 3px 16px rgba(200, 205, 210, 0.5);
+  -moz-box-shadow: 0 3px 16px rgba(200, 205, 210, 0.5);
+  box-shadow: 0 3px 16px rgba(200, 205, 210, 0.5);
+}
+
+
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}
+
+
+
