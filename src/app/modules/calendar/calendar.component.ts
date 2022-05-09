@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 import * as moment from "moment";
@@ -9,6 +9,7 @@ import {LabelModel} from "./models/label.model";
 import {NoteModel} from "./models/note.model";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {EditCardModalComponent} from "./components/edit-card-modal/edit-card-modal.component";
+import {CalendarService} from "./services/calendar.service";
 
 @UntilDestroy()
 
@@ -16,16 +17,16 @@ import {EditCardModalComponent} from "./components/edit-card-modal/edit-card-mod
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CalendarComponent implements OnInit {
   labels: LabelModel[] = [];
   calendar!: Array<CalendarDayItemModel[]>;
-  notes!: AnalyzedNoteModel[];
   weekOfYear!: number;
   firstDayOfWeek!: string;
-
+  moment = moment;
+  notesList!: AnalyzedNoteModel[];
 
   result = {
     notes: {
@@ -183,7 +184,8 @@ export class CalendarComponent implements OnInit {
   };
 
   constructor(private route: ActivatedRoute,
-              private ngbModal: NgbModal) {
+              private ngbModal: NgbModal,
+              public calendarService: CalendarService) {
   }
 
   ngOnInit(): void {
@@ -194,9 +196,15 @@ export class CalendarComponent implements OnInit {
         this.analyseNotes(res.notesResult.notes.notes);
       })
 
+    this.calendarService.notesList$
+      .pipe(untilDestroyed(this))
+      .subscribe(res => {
+        this.notesList = res;
+        console.log('aaaa', this.notesList);
+      })
+
     // this.modifyLabelNote(this.result.labels)
     // this.analyseNotes(this.result.notes.notes);
-
   }
 
   modifyLabelNote(labels: LabelModel[]): void {
@@ -210,15 +218,47 @@ export class CalendarComponent implements OnInit {
 
   analyseNotes(notes: NoteModel[]): void {
     let tempAnalyzedNote: AnalyzedNoteModel[] = [];
-    notes.map((note: NoteModel) => {
-      const temp = new AnalyzedNoteModel(note.id, note.title, note.labels, note.summary, note.startDate, note.endDate);
-      return temp.dateTimes !== null ? tempAnalyzedNote.push(temp) : null;
-    })
+    // notes.map((note: NoteModel) => {
+    notes.forEach((note: NoteModel) => {
+      const dayDiff = moment.unix(note.endDate).diff(moment.unix(note.startDate), 'days');
+      const startDayOfWeek = moment.unix(note.startDate).weekday();
+      console.log(' dayDiff->', dayDiff, 'startDayOfWeek->', startDayOfWeek)
 
-    this.notes = tempAnalyzedNote;
+      if (dayDiff < 3) {
+        const temp = new AnalyzedNoteModel(note.id, note.title, note.labels, note.summary, note.startDate, note.endDate);
+        temp.dateTimes !== null ? tempAnalyzedNote.push(temp) : null;
+      }
+
+      if (dayDiff > 3) {
+        //Start On Friday
+        if (startDayOfWeek === 5) {
+          //  i = 3;
+          tempAnalyzedNote.push(new AnalyzedNoteModel(note.id, note.title, note.labels, note.summary, note.startDate, note.startDate));
+          tempAnalyzedNote.push(new AnalyzedNoteModel(note.id, note.title, note.labels, note.summary, Number(moment.unix(note.startDate).add(3, 'd')), note.endDate));
+          return
+        }
+        if (startDayOfWeek === 4) {
+          tempAnalyzedNote.push(new AnalyzedNoteModel(note.id, note.title, note.labels, note.summary, note.startDate, Number(moment.unix(note.startDate).add(1, 'd').format('X'))));
+          //  i = 4;
+          tempAnalyzedNote.push(new AnalyzedNoteModel(note.id, note.title, note.labels, note.summary, Number(moment.unix(note.startDate).add(4, 'd').format('X')), note.endDate));
+        }
+      }
+      return tempAnalyzedNote;
+      // return temp.dateTimes !== null ? tempAnalyzedNote.push(temp) : null;
+    })
+    this.calendarService.setNoteList(tempAnalyzedNote);
     this.generationData(tempAnalyzedNote[0].dateTimes[0]);
 
     console.log('tempAnalyzedNote', tempAnalyzedNote)
+  }
+
+  generationData(firstDay: string): void {
+    this.firstDayOfWeek = firstDay;
+    this.calendar = this.createWeekView(firstDay);
+    this.weekOfYear = moment(firstDay).week();
+
+    console.log('firstDayOfWeek', this.firstDayOfWeek)
+    console.log('calendar->', this.createWeekView(this.firstDayOfWeek))
   }
 
   createWeekView(date: string) {
@@ -249,15 +289,6 @@ export class CalendarComponent implements OnInit {
     return myCalendar;
   }
 
-  generationData(firstDay: string): void {
-    this.firstDayOfWeek = firstDay;
-    this.calendar = this.createWeekView(firstDay);
-    this.weekOfYear = moment(firstDay).week();
-
-    console.log('firstDayOfWeek', this.firstDayOfWeek)
-    console.log('calendar->', this.createWeekView(this.firstDayOfWeek))
-  }
-
   arrowHandler(action: string): void {
     if (action === 'next') {
       this.firstDayOfWeek = moment(this.firstDayOfWeek).add(1, 'week').format("YYYY-MM-DD");
@@ -268,11 +299,13 @@ export class CalendarComponent implements OnInit {
   }
 
   findNoteInNotes(date: moment.Moment): AnalyzedNoteModel[] {
-    return this.notes.filter(note => note.dateTimes[0] === moment(date).format("YYYY-MM-DD"))
+    // return this.notes.filter(note => note.dateTimes[0] === moment(date).format("YYYY-MM-DD"))
+    return this.notesList.filter(note => note.dateTimes[0] === moment(date).format("YYYY-MM-DD"))
+    // return this.notesList.filter(note => moment(note.dateTimes[0]).format("YYYY-MM-DD") === (date).format("YYYY-MM-DD") )
   }
 
   changeFilter($event: any): void {
-    this.calendar = this.createWeekView(this.notes[0].dateTimes[0]);
+    this.calendar = this.createWeekView(this.firstDayOfWeek);
     let temp = [];
     if ($event.target.value === '0') {
       temp = this.calendar;
@@ -283,9 +316,11 @@ export class CalendarComponent implements OnInit {
     this.calendar = temp;
   }
 
-  selectDay(day: CalendarDayItemModel): void {
-    const editCart = this.ngbModal.open(EditCardModalComponent, {size: 'lg', centered: true});
+  selectDay(day: CalendarDayItemModel, note: AnalyzedNoteModel): void {
+    //size: 'lg',
+    const editCart = this.ngbModal.open(EditCardModalComponent, {centered: true});
     editCart.componentInstance.calendarData = day;
-    console.log(day)
+    editCart.componentInstance.noteItem = note;
+    console.log(day, note)
   }
 }

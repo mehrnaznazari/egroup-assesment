@@ -53,8 +53,6 @@ input {
     }
 
   }
-
-
 }
 
 select {
@@ -112,130 +110,6 @@ select {
   }
 }
 
-/*.custom-control {
-  &.custom-checkbox,
-  &.custom-radio {
-    padding-right: 38px;
-    padding-left: 15px;
-
-    .custom-control-label {
-      display: inline-block !important;
-      cursor: pointer;
-
-      &:before {
-        //background-color: transparent;
-        right: -1.5rem;
-        left: auto;
-      }
-
-      &::after {
-        right: -1.5rem;
-        left: auto;
-      }
-    }
-
-    .custom-control-input {
-      right: 0;
-
-      &:focus {
-        & ~ label {
-          &::before {
-            box-shadow: none;
-            border-color: #adb5bd;
-          }
-        }
-      }
-
-      &:active {
-        & ~ label {
-          &::before {
-            background-color: transparent;
-            border-color: $deep-orange-1;
-            box-shadow: none;
-          }
-        }
-      }
-
-      &:checked {
-        & ~ label {
-          &::before {
-            border-color: $deep-orange-1;
-            background: $deep-orange-1;
-          }
-        }
-      }
-    }
-  }
-
-  &.custom-switch {
-    padding-right: 28px;
-    padding-left: 0;
-
-    .custom-control-label {
-      padding-right: 0.75rem;
-      cursor: pointer;
-
-      &:before {
-        background-color: $grey-1;
-        border-color: $grey-1;
-        right: -1.5rem;
-        left: auto;
-      }
-
-      &::after {
-        background-color: $white;
-        right: calc(-1.5rem + 2px);
-        left: auto;
-      }
-    }
-
-    .custom-control-input {
-      right: 0;
-
-      &:focus {
-        & ~ label {
-          &::before {
-            box-shadow: none;
-          }
-        }
-      }
-
-      &:checked {
-        & ~ label {
-          &::before {
-            border-color: $deep-orange-1;
-            background: $deep-orange-1;
-          }
-        }
-
-        & ~ .custom-control-label {
-          &::after {
-            transform: translateX(-0.75rem);
-          }
-        }
-      }
-
-      &:not(:disabled):active{
-        ~ .custom-control-label{
-          &::before{
-            background-color: $deep-orange-4;
-            border-color: $deep-orange-3;
-          }
-        }
-      }
-
-      &:focus:not(:checked){
-        ~ .custom-control-label {
-          &::before{
-            border-color: $deep-orange-3;
-          }
-        }
-      }
-    }
-  }
-
-}*/
-
 .form-wrapper {
   margin: 1.5rem 0 0.5rem 0;
 
@@ -243,14 +117,13 @@ select {
     padding: 0;
     display: block;
     text-align: left;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     @media #{$breakpoint-mobile} {
       margin-bottom: 1rem;
     }
 
     span {
       font-family: 'Lato', serif;
-      margin-bottom: 0.5rem;
       line-height: 1.1rem;
       display: inline-block;
       vertical-align: middle;
@@ -258,12 +131,12 @@ select {
     }
   }
 
-/*  span {
+  span {
     &.required {
       margin-right: 0.25rem;
       color: $error;
     }
-  }*/
+  }
 
   @media #{$breakpoint-tablet} {
     label {
@@ -318,4 +191,19 @@ textarea {
   &.border-error {
     border: 1px solid $error;
   }
+}
+
+.error-place {
+  p {
+    font-family: 'Lato', serif !important;
+    margin: 4px 0 !important;
+    text-align: left !important;
+    font-size: 12px !important;
+    color: $error !important;
+
+    i {
+      vertical-align: middle !important;
+    }
+  }
+
 }

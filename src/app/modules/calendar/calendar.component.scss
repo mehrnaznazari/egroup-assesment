@@ -19,6 +19,7 @@
 }
 
 .calendar {
+  overflow: hidden;
   &-header {
     border-bottom: 1px solid $border-color;
     background-color: #f3f4f5;
@@ -204,7 +205,15 @@
   }
 }
 
-.double {
-  z-index: 5 !important;
+//.double {
+//  z-index: 5 !important;
+//  width: 195%;
+//}
+.multi_2 {
   width: 195%;
+  z-index: 5 !important;
+}
+.multi_3 {
+  width: 296.5%;
+  z-index: 5 !important;
 }
