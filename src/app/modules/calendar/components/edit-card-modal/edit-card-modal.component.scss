@@ -18,6 +18,10 @@
       margin-top: 0.5rem;
     }
 
+    &-input {
+      margin-bottom: 1.25rem;
+    }
+
     &-textarea {
       margin-bottom: 1.25rem;
 
@@ -29,6 +33,11 @@
     &-date {
       margin-bottom: 1.25rem;
     }
+
+    &-button {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
 
@@ -36,7 +45,7 @@
   border: 1px solid $border-color;
   transition: all .3s;
   color: $text-color;
-  padding: 3px 12px;
+  padding: 3px 12px !important;
 
   &:hover {
     border-color: $deep-orange-1;

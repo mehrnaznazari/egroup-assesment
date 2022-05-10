@@ -5,7 +5,7 @@ import {CalendarComponent} from './calendar.component';
 import {CalendarRoutingModule} from './calendar-routing.module';
 import {EditCardModalComponent} from './components/edit-card-modal/edit-card-modal.component';
 import {DeleteCardModalComponent} from './components/delete-card-modal/delete-card-modal.component'
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
@@ -19,6 +19,7 @@ import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
     ReactiveFormsModule,
     CalendarRoutingModule,
     NgbDatepickerModule,
+    FormsModule
   ],
   exports: []
 })

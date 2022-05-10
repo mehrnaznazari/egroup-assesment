@@ -21,7 +21,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     HttpClientModule,
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService,  multi: true},
   ],
   bootstrap: [AppComponent]
 })

@@ -1,20 +1,28 @@
 @import '../components/variables';
 
 html, body {
-  min-height: 100%;
   font-family: 'Lato', serif;
-  font-size: 100%;
   background-color: $bg-color;
+  min-height: 100%;
+  font-size: 100%;
 }
 
 .btn {
+    padding: 7px 1.25rem !important;
   &.btn-orange {
     transition: all .3s;
     background-color: $deep-orange-3;
     border-color: $deep-orange-3;
     color: $white !important;
-    padding: 7px 1rem;
-
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+  &.btn-gray {
+    transition: all .3s;
+    background-color: $gray;
+    border-color: $gray;
+    color: $white !important;
     &:hover {
       transform: translateY(-2px);
     }

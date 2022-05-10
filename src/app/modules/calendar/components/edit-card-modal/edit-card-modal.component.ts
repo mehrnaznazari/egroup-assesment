@@ -1,30 +1,32 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {NgbActiveModal, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-
-import {CalendarDayItemModel} from "../../models/calendar-day-item.model";
+import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AnalyzedNoteModel} from "../../models/analyzed-note.model";
 import {CalendarService} from "../../services/calendar.service";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 import * as moment from "moment";
+import {NoteModel} from "../../models/note.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import {DeleteCardModalComponent} from "../delete-card-modal/delete-card-modal.component";
 
 @UntilDestroy()
 
 @Component({
   selector: 'app-edit-card-modal',
   templateUrl: './edit-card-modal.component.html',
-  styleUrls: ['./edit-card-modal.component.scss']
+  styleUrls: ['./edit-card-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class EditCardModalComponent implements OnInit {
   editForm!: FormGroup;
-  @Input() calendarData!: CalendarDayItemModel;
   @Input() noteItem!: AnalyzedNoteModel;
-  model!: NgbDateStruct;
   notesList!: AnalyzedNoteModel[];
+  moment = moment;
 
   constructor(private formBuilder: FormBuilder,
               public activeModal: NgbActiveModal,
+              private ngbModal: NgbModal,
               private calendarService: CalendarService) {
   }
 
@@ -35,13 +37,15 @@ export class EditCardModalComponent implements OnInit {
       const endDate = this.noteItem.dateTimes[this.noteItem.dateTimes.length - 1].split('-');
       endEvent = {"year": Number(endDate[0]), "month": Number(endDate[1]), "day": Number(endDate[2])}
     }
+
     this.editForm = this.formBuilder.group({
-      cardDescription: new FormControl(null, [Validators.maxLength(250)]),
+      cardTitle: new FormControl(this.noteItem.title, [Validators.required]),
+      cardDescription: new FormControl(this.noteItem.summary, [Validators.required, Validators.maxLength(250)]),
       startDatePicker: new FormControl({
         "year": Number(startEvent[0]),
         "month": Number(startEvent[1]),
         "day": Number(startEvent[2])
-      }),
+      }, [Validators.required]),
       endDatePicker: new FormControl(endEvent),
     });
 
@@ -53,60 +57,66 @@ export class EditCardModalComponent implements OnInit {
   }
 
   editFormSubmit(): void {
-    debugger
     console.log(this.editForm.value)
-    if (!this.editForm.value.cardDescription && !this.editForm.value.startDatePicker) {
+    if (!this.editForm.value.cardTitle && !this.editForm.value.cardDescription && !this.editForm.value.startDatePicker) {
       return
     }
 
-    if (this.editForm.value.cardDescription) {
-      this.noteItem.summary = this.editForm.value.cardDescription;
-    }
-
-    /*    if (this.editForm.value.startDatePicker) {
-          const startDate = new Date(this.editForm.value.startDatePicker.year, this.editForm.value.startDatePicker.month - 1, this.editForm.value.startDatePicker.day);
-          const endDate = this.noteItem.dateTimes.length === 1 ? startDate : this.noteItem.dateTimes[this.noteItem.dateTimes.length - 1];
-          const newNote = new AnalyzedNoteModel(this.noteItem.id, this.noteItem.title, this.noteItem.labels, this.noteItem.summary, Number(moment(startDate).format('X')), Number(moment(endDate).format('X')));
-
-          // this.noteItem.dateTimes.splice(0, this.noteItem.dateTimes, ...temp)
-
-          // console.log('const startDate', startDate, moment(startDate).unix())
-          // console.log('startDate: ', startDate, Number(moment(startDate).format('X')))
-          // console.log('endDate: ', endDate, Number(moment(endDate).format('X')))
-          // console.log('new', newNote.dateTimes[0], moment(newNote.dateTimes[0]).format("YYYY-MM-DD"))
-          // temp.dateTimes !== null ? (temp) : null;
-          // console.log(this.noteItem.dateTimes)
-        }*/
-
     let startDate = null;
     let endDate = null;
-    if (this.editForm.value.startDatePicker) {
-      startDate = new Date(this.editForm.value.startDatePicker.year, this.editForm.value.startDatePicker.month - 1, this.editForm.value.startDatePicker.day);
-      endDate = this.noteItem.dateTimes.length === 1 ? startDate : new Date(this.editForm.value.endDatePicker.year, this.editForm.value.endDatePicker.month - 1, this.editForm.value.endDatePicker.day);
-    }
-
+    //Create Start Date
+    startDate = new Date(this.editForm.value.startDatePicker.year, this.editForm.value.startDatePicker.month - 1, this.editForm.value.startDatePicker.day);
+    //Create End Date
     if (this.editForm.value.endDatePicker) {
       endDate = new Date(this.editForm.value.endDatePicker.year, this.editForm.value.endDatePicker.month - 1, this.editForm.value.endDatePicker.day);
       this.editForm.setErrors({'invalid': !(startDate && (endDate < startDate))});
+    } else {
+      endDate = startDate;
     }
-
-    const newNote = new AnalyzedNoteModel(this.noteItem.id, this.noteItem.title, this.noteItem.labels, this.noteItem.summary, Number(moment(startDate).format('X')), Number(moment(endDate).format('X')));
+    // Create Note with new data
+    const newNote = new AnalyzedNoteModel(this.noteItem.id, this.editForm.value.cardTitle, this.noteItem.labels, this.editForm.value.cardDescription, Number(moment(startDate).format('X')), Number(moment(endDate).format('X')));
     if (!newNote.dateTimes) {
       this.editForm.setErrors({'invalid': true});
       return;
     }
-    this.noteItem.dateTimes = newNote.dateTimes;
+    console.log('newNote: ', newNote)
 
-    const index = this.notesList.findIndex(note => note.id === this.noteItem.id);
-    console.log('inex', index)
+    const payload: NoteModel = {
+      id: this.noteItem.id,
+      title: this.editForm.value.cardTitle,
+      summary: this.editForm.value.cardDescription,
+      labels: this.noteItem.labels,
+      startDate: Number(moment(startDate).format('X')),
+      endDate: Number(moment(endDate).format('X')),
+    };
+    this.calendarService.editNoteHandler(this.noteItem.id, JSON.stringify(payload))
+      .pipe(untilDestroyed(this))
+      .subscribe(res => {
+          console.log(res)
+        },
+        (error: HttpErrorResponse) => {
+          // alert(error.message);
+        })
+
+    const index = this.notesList.findIndex(note => note.id === newNote.id);
     if (index > -1) {
-      this.notesList[index] = this.noteItem;
+      this.notesList[index] = newNote;
+      this.calendarService.setNoteList(this.notesList);
+    } else {
+      return;
     }
-    this.calendarService.setNoteList(this.notesList);
-
-
     this.editForm.reset();
     this.activeModal.dismiss('CLOSE');
   }
 
+  onCancel(): void {
+    this.editForm.reset();
+    this.activeModal.dismiss('CLOSE');
+  }
+
+  delete():void{
+    const editCart = this.ngbModal.open(DeleteCardModalComponent, {centered: true});
+    editCart.componentInstance.noteItem = this.noteItem;
+    this.activeModal.dismiss('CLOSE');
+  }
 }

@@ -13,7 +13,7 @@ $green-label: #79b067;
 $green-border: #c2d1be;
 
 
-$grey-3: #8E8E8E;
+$gray: #8E8E8E;
 
 $deep-orange-1: #F38C09;
 $deep-orange-2: #F5A53F;
@@ -30,8 +30,9 @@ $radius-50: 50%;
 //breakpoint
 $breakpoint-mobile: "only screen and (max-width : 575px)";
 $breakpoint-tablet: "only screen and (max-width: 767px)";
-$breakpoint-l-desktop: "only screen and (max-width: 992px)";
-$breakpoint-xl-desktop: "only screen and (max-width: 1200px)";
+$breakpoint-desktop: "only screen and (max-width: 992px)";
+$breakpoint-l-desktop: "only screen and (max-width: 1200px)";
+$breakpoint-xl-desktop: "only screen and (max-width: 1600px)";
 
 $breakpoint-min-ultra-screen: "only screen and (min-width: 1200px)";
 $breakpoint-min-xl-desktop: "only screen and (min-width: 1024px)";

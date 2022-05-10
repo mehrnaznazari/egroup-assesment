@@ -4,25 +4,49 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    <form (ngSubmit)="editFormSubmit()" [formGroup]="editForm" class="edit-card-form form-wrapper">
-      <div class="edit-card-textarea">
-        <label for="cardDescription"> <span>Summery</span></label>
-        <textarea [ngClass]="{'border-error' : (editForm.hasError('maxLength', 'cardDescription')) }"
-                  id="cardDescription"
-                  class="textarea-control"
-                  formControlName="cardDescription"
-                  maxlength="251"
-                  placeholder="Summery"></textarea>
-
+    <form #formDir (ngSubmit)="editFormSubmit()" [formGroup]="editForm" class="edit-card-form form-wrapper">
+      <div class="edit-card-input">
+        <label for="cardTitle"> <span>Event Title</span></label>
+        <input
+          [ngClass]="{'border-error' : (editForm.hasError('required', 'cardTitle')) }"
+          id="cardTitle"
+          class="textarea-control"
+          formControlName="cardTitle"/>
         <div class="error-place">
-          <div *ngIf="((editForm.controls['cardDescription'].dirty || editForm.controls['cardDescription'].touched))">
-            <p class="errorMessage" *ngIf="editForm.hasError('maxlength', 'cardDescription')">
+          <div *ngIf="(editForm.hasError('required', 'cardTitle'))">
+            <p class="errorMessage">
               <i class="fa fa-exclamation-circle"></i>
-              Up to 250 characters are allowed.
+              Required!
             </p>
           </div>
         </div>
       </div>
+
+      <div class="edit-card-textarea">
+        <label for="cardDescription"> <span>Summery</span></label>
+        <textarea
+          [ngClass]="{'border-error' : (editForm.hasError('required', 'cardDescription') || editForm.hasError('maxLength', 'cardDescription')) }"
+          id="cardDescription"
+          class="textarea-control"
+          formControlName="cardDescription"
+          maxlength="251"
+          placeholder="Summery"></textarea>
+
+        <div class="error-place">
+          <div
+            *ngIf="((editForm.controls['cardDescription'].dirty || editForm.controls['cardDescription'].touched) || formDir.submitted)">
+            <p class="errorMessage" *ngIf="editForm.hasError('maxlength', 'cardDescription')">
+              <i class="fa fa-exclamation-circle"></i>
+              Up to 250 characters are allowed.
+            </p>
+            <p class="errorMessage" *ngIf="(editForm.hasError('required', 'cardDescription'))">
+              <i class="fa fa-exclamation-circle"></i>
+              Required!
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div class="edit-card-date">
         <label for="startDatePicker"> <span>Start Date</span></label>
         <div class="input-group">
@@ -32,12 +56,23 @@
                  formControlName="startDatePicker"
                  name="startDatePicker"
                  ngbDatepicker
+                 [ngClass]="{'border-error' : (editForm.hasError('required', 'startDatePicker')) }"
                  placeholder="yyyy-mm-dd">
           <button (click)="dp.toggle()" class="btn btn-calendar" type="button">
             <i class="fa-solid fa-calendar-days"></i>
           </button>
         </div>
+        <div class="error-place">
+          <div
+            *ngIf="((editForm.controls['startDatePicker'].dirty || editForm.controls['startDatePicker'].touched) || formDir.submitted) && (editForm.hasError('required', 'startDatePicker'))">
+            <p class="errorMessage">
+              <i class="fa fa-exclamation-circle"></i>
+              Required!
+            </p>
+          </div>
+        </div>
       </div>
+
       <div class="edit-card-date">
         <label for="endDatePicker"> <span>End Date</span></label>
         <div class="input-group">
@@ -52,31 +87,30 @@
           <button (click)="de.toggle()" class="btn btn-calendar" type="button">
             <i class="fa-solid fa-calendar-days"></i>
           </button>
-          <!--<div class="error-place">
-            <div *ngIf="(editForm.controls['endDatePicker'].dirty && editForm.value.startDatePicker >  editForm.value.endDatePicker   )">
-              <p class="errorMessage">
-                <i class="fa fa-exclamation-circle"></i>
-               Noo
-              </p>
-            </div>
-          </div>-->
+        </div>
+        <div class="error-place">
+          <div *ngIf="( moment(editForm.value.startDatePicker) >  moment(editForm.value.endDatePicker)   )">
+            <p class="errorMessage">
+              <i class="fa fa-exclamation-circle"></i>
+              End Date isn`t Valid.
+            </p>
+          </div>
         </div>
       </div>
+
       <div class="edit-card-button">
         <button
-          [disabled]="!editForm.valid ||  (!editForm.value.cardDescription  && !editForm.value.startDatePicker)"
-          class="btn btn-orange w-100" type="submit">Submit
+          [disabled]="!editForm.valid ||  (!editForm.value.cardTitle && !editForm.value.cardDescription  && !editForm.value.startDatePicker)"
+          class="btn btn-orange"
+          type="submit">Submit
+        </button>
+        <button (click)="onCancel()" type="button" class="btn btn-gray">
+          Cancel
+        </button>
+        <button (click)="delete()" type="button" class="btn btn-danger">
+          delete
         </button>
       </div>
-
-      <!--      <pre>{{!editForm.value.cardDescription  && !editForm.value.datePicker  }}</pre>-->
-      <!--      <p>{{editForm.value.cardDescription!== '' }}</p>-->
-      <!--      <p>{{editForm.value.cardDescription}}</p>-->
-      <!--      <p>{{editForm.value.datePicker}}</p>-->
-      <!--&lt;!&ndash;      <pre>{{formDisabled  }}</pre>&ndash;&gt;-->
-      <!--      <pre>{{editForm.value.datePicker }}</pre>-->
-            <pre>{{editForm.valid  | json}}</pre>
-      <!--&lt;!&ndash;      <pre>{{editForm.controls.datePicker.errors |  json}}</pre>&ndash;&gt;-->
     </form>
   </div>
 </div>

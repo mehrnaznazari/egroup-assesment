@@ -25,8 +25,7 @@ export class ConfigService {
   private _hostName!: string;
 
   constructor() {
-    // https://61ee5f30d593d20017dbad98.mockapi.io/pinguin/api/noteLabels
-    this.baseUrl = 'https://61ee5f30d593d20017dbad98.mockapi.io';
+    this.baseUrl = 'https://61ee5f30d593d20017dbad98.mockapi.io/pinguin';
     this.hostName = window.location.origin;
   }
 }

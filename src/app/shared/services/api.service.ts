@@ -10,7 +10,13 @@ import {ConfigService} from './config.service';
 export class ApiService {
 
   httpOptions: any = {
-    headers: new HttpHeaders({'Content-Type': 'application/json'}),
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': '*',
+    }),
     observe: 'response'
   };
 
@@ -18,7 +24,7 @@ export class ApiService {
 
   constructor(private httpClient: HttpClient,
               private configService: ConfigService) {
-    this.serverURL = `${this.configService.baseUrl}/pinguin/api/`;
+    this.serverURL = `${this.configService.baseUrl}/api/`;
   }
 
   get<T>(url: string, queryParams?: any): Observable<T> {
@@ -34,12 +40,7 @@ export class ApiService {
       }
     }
 
-    let options: any = {
-      observe: this.httpOptions.observe,
-      params: queryParamsLocal
-    };
-
-    return this.httpClient.get<T>(this.serverURL + url, options)
+    return this.httpClient.get<T>(this.serverURL + url, this.httpOptions)
       .pipe(
         map((res: any) => {
           return res.body;
@@ -47,4 +48,12 @@ export class ApiService {
       );
   }
 
+  put<T>(url: string, payload: T): any {
+    return this.httpClient.put<T>((this.serverURL) + url, payload, this.httpOptions)
+      .pipe(
+        map((res: any) => {
+          return res.body;
+        })
+      );
+  }
 }

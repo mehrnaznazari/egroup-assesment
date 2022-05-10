@@ -3,10 +3,10 @@
   <div class="flex-container calendar-header">
 
     <div class="calendar-filter">
-      <select *ngIf="labels" (change)="changeFilter($event)">
-          <option *ngFor="let label of labels"
-                  [value]="label.id"
-          >{{label.text}}</option>
+      <select *ngIf="labels" (change)="changeFilter($event)" [(ngModel)]="filter">
+        <option *ngFor="let label of labels"
+                [value]="label.id"
+        >{{label.text}}</option>
       </select>
     </div>
 
@@ -49,8 +49,6 @@
                      [ngClass]="'multi_'+(item.dateTimes.length)"
                      (click)="selectDay(calendarDay, item)"
                 >
-<!--                     [ngClass]="{'': item.dateTimes.length> 1}"-->
-<!--                     [style.width.%]="(item.dateTimes.length)*97"-->
                   <div class="note-cart-container">
                     <div class="note-cart-header">
                       <span class="badge">{{item.id}}</span>
@@ -58,16 +56,12 @@
                       <span class="note-label">{{calendarDay.weekLabel.text}}</span>
                     </div>
                     <div class="note-cart-desc">
-                      <p>{{item.summary}}</p>
-<!--                      <div class="note-cart-date">start Date: {{  moment(item.dateTimes[0]).format("YYYY-MM-DD")}}</div>-->
+                      <p [title]="item.summary">{{item.summary}}</p>
                       <div class="note-cart-date">start Date: {{  item.dateTimes[0] }}</div>
                       <p>Duration: {{item.dateTimes.length}}</p>
                     </div>
                   </div>
-<!--                  {{item | json}}-->
                 </div>
-
-<!--                {{calendarDay | json}}-->
 
               </ng-container>
             </ng-container>
